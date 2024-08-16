@@ -1,6 +1,4 @@
 "use client"
-
-import type { Metadata } from "next";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Inter } from "next/font/google";
 import Dot from "./components/animata/background/dot";
@@ -10,11 +8,13 @@ import { MdCatchingPokemon } from "react-icons/md";
 
 import "./globals.css";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 const RootLayout = ({ children }: React.PropsWithChildren) => (
   <html lang="en">
+    <head>
+      <title>Pokdex</title>
+    </head>
     <body className="bg-zinc-100">      
       <Dot
         color="#dadada"
