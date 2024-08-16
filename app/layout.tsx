@@ -31,7 +31,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
               <MdCatchingPokemon className="text-6xl"/>              
             </div>
           </Link>
-          <div className="p-5 rounded-xl w-[calc(100vw_-_50px)] h-full mb-5 bg-opacity-70 bg-zinc-200">
+          <div className="p-5 rounded-xl w-[calc(100vw_-_50px)] max-h-full mb-5 bg-opacity-70 bg-zinc-200">
             <AntdRegistry>{children}</AntdRegistry>              
           </div>
         </div>      
