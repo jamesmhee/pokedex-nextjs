@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Switch, Table } from 'antd';
 import { GetData } from '../services/GetData';
 import type { TableColumnsType } from 'antd';
-import { IPokemonData } from '../utils/PokemonInterface';
+import { IPokemonData, IPokemons } from '../utils/PokemonInterface';
 import SearchBox from './SearchBox';
 import Loading from './Loading';
 
@@ -22,26 +22,29 @@ const CustomTable = () => {
 
   const get = async (searchValue: string) =>{    
     const result = await GetData(200)
+    setIsLoading(false)
     if(result){
-      setData(result?.data.pokemons)
+      setData(result?.data?.pokemons)
     }
 
-    if(searchValue.trim() !== ''){
-
-      const filter = data.filter((elm, index)=>{
+    if(searchValue.trim() !== ''){      
+      const filter = result?.data?.pokemons.filter((elm: IPokemons , index: number)=>{
         return elm.name.toLowerCase().includes(searchValue.toLowerCase())
       })            
       setData(filter)
     }else{
-      setData(result?.data.pokemons)
-    }
-
-    setIsLoading(false)
+      const fetchNewData = await GetData(200)
+      setData(fetchNewData?.data?.pokemons)
+    }    
   }
 
   const handleSearch = (event:string) =>{
-    setSearchValue(event)    
-    setIsLoading(true)    
+    setIsLoading(true)
+    if(event.trim() !== searchValue.trim()){
+      setSearchValue(event.trim())
+    }else{      
+      setIsLoading(false)
+    }
   }
 
   const findTypes = (types: string) =>{
