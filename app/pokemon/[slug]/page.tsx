@@ -30,7 +30,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
 
   const findAvg = (min:number, max:number)=> {
     const find = (min + max) / 2
-    return find
+    return find.toFixed(2)
   }
 
   const Evolution = (name:string) =>{
