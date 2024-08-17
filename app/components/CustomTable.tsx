@@ -153,7 +153,7 @@ const CustomTable = () => {
         summary={() => (
           <Table.Summary>
             <Table.Summary.Row>
-              <Table.Summary.Cell index={0} colSpan={2}>                
+              <Table.Summary.Cell index={0} colSpan={5}>                
               </Table.Summary.Cell>                                          
             </Table.Summary.Row>            
           </Table.Summary>

@@ -15,6 +15,7 @@ import Image from "next/image";
 
 const Page = ({ params }: { params: { slug: string } }) => {  
   const [ Pokemon, setPokemon ] = useState<PokemonDetail>({} as PokemonDetail)
+  const [ onEvolution, setOnEvolution ] = useState<boolean>(false)
   const Router = useRouter()
   
   useEffect(()=>{
@@ -32,16 +33,23 @@ const Page = ({ params }: { params: { slug: string } }) => {
     return find
   }
 
+  const Evolution = (name:string) =>{
+    setOnEvolution(true)
+    setTimeout(()=>{
+      Router.push(`/pokemon/${name}?evolution=true`)
+    }, 2000)
+  }
+
   return (
     <div>
       {
         Object.keys(Pokemon).length > 0 ?         
         (
-          <>
-            <div className="flex items-center gap-5 text-lg justify-end">
-              <CustomButton type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
-            </div>            
-            <div className="flex flex-col md:flex-row justify-between gap-5 overflow-hidden">
+          <>          
+            <div className="flex sm:hidden items-center my-2 mr-[-15px] text-lg justify-end">
+                <CustomButton onLoading={false} type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
+            </div>  
+            <div className="flex flex-col md:flex-row gap-5 overflow-hidden">
               <div className="mx-auto w-full sm:w-max justify-center items-center sm:mx-auto md:mx-0 flex flex-col">
                 <Image alt="Pokemon Image" 
                   width={0}
@@ -58,13 +66,16 @@ const Page = ({ params }: { params: { slug: string } }) => {
                   <span className="text-right text-[12px] sm:text-base">{Pokemon.classification}</span>
                 </div>
               </div>
-              <ul className="flex flex-col gap-5 flex-0">
+              <ul className="flex flex-col gap-5 flex-0 w-full">
+                <div className="hidden sm:flex items-center gap-5 text-lg justify-end">
+                  <CustomButton onLoading={false} type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
+                </div>
                 <Divider orientation="left" orientationMargin={0} plain>
                   <span className="text-xl flex items-center gap-2 font-medium"><FaInfoCircle/> Info</span>
                 </Divider>
 
-                <div className="flex gap-2 flex-wrap">
-                  <li className="flex-1 leading-10">                    
+                <div className="flex flex-wrap">
+                  <li className="flex-1 leading-[45px]">                    
                     <div className="flex gap-2">
                       <span className="font-bold">Type:</span>
                       <div className="flex flex-wrap gap-2">
@@ -99,10 +110,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
                       <span className="font-bold">MAX HP:</span>
                       <span>{Pokemon.maxHP}</span>
                     </div>
-                  </li>
-
+                  </li>                  
                   <li className="flex-1 leading-10">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mb-2">
                       <span className="font-bold">Resistant:</span>
                       <div className="flex gap-2 flex-wrap">
                         {Pokemon.resistant.map((elm, index) => (
@@ -112,9 +122,25 @@ const Page = ({ params }: { params: { slug: string } }) => {
                         ))}
                       </div>
                     </div>
-                  </li>
+                    <div className="flex gap-2">
+                      <span className="font-bold">Weakness:</span>
+                      <div className="flex gap-2 flex-wrap">
+                        {Pokemon.weaknesses.map((elm, index) => (
+                          <span key={index} className={findTypes(elm) + ' px-5 rounded-lg'}>
+                            {elm}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </li>                  
                 </div>
-              </ul>
+                {
+                  Pokemon.evolutions ? 
+                  (<><CustomButton onLoading={onEvolution} type={"primary"} text={'EVOLUTION'} onClick={()=>Evolution(Pokemon.evolutions[0].name)}/></>)
+                  :
+                  (<></>)
+                }                
+              </ul>              
             </div>
 
             <ul className="flex flex-col gap-5">
