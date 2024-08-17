@@ -28,3 +28,13 @@ export interface PokemonContextProps {
   choosePokemon: string
   setChoosePokemon: React.Dispatch<SetStateAction<string>>
 }
+
+export interface PokemonTable {  
+  id: string
+  number: string
+  name: string
+  classification: string
+  types: string[]
+  evolutions: any
+  image: string    
+}

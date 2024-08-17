@@ -3,12 +3,13 @@ import { Button } from 'antd';
 
 interface IBtnProps {
   type: "link" | "text" | "default" | "primary" | "dashed" | undefined
-  text: string
+  text: string | JSX.Element | JSX.Element[]
+  onClick: ()=>void;
 }
 
-const CustomButton = ({type, text} : IBtnProps) => {
+const CustomButton = ({type, text, onClick} : IBtnProps) => {
   return (
-    <Button type={type}>{text}</Button>
+    <Button type={type} onClick={onClick}>{text}</Button>
   )
 }
 

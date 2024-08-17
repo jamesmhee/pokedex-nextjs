@@ -3,25 +3,55 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Switch, Table } from 'antd';
 import { GetData } from '../services/GetData';
 import type { TableColumnsType } from 'antd';
-import { IPokemonData, IPokemons } from '../utils/Interface/PokemonInterface';
+import { IPokemonData, IPokemons, PokemonTable } from '../utils/Interface/PokemonInterface';
 import SearchBox from './SearchBox';
 import Loading from './Loading';
 import { useRouter } from 'next/navigation';
 import { PokemonContext } from '../utils/Store/PokemonStore';
 
-interface ICustomTableProps {
-  data: IPokemonData
-  columns: TableColumnsType
-}
+export const findTypes = (types: string) =>{
+  switch(types.toLowerCase()){
+    case 'grass':
+      return 'bg-lime-500 text-white'
+    case 'poison':
+      return 'bg-violet-700 text-white'
+    case 'fire':
+      return 'bg-red-500 text-white'
+    case 'water':
+      return 'bg-blue-500 text-white'
+    case 'flying':
+      return 'bg-blue-700 text-white'
+    case 'bug':
+      return 'bg-green-700 text-white'
+    case 'electric':
+      return 'bg-yellow-300 text-black'
+    case 'ground':
+      return 'bg-amber-800 text-white'
+    case 'fairy':
+      return 'bg-indigo-300 text-black'
+    case 'fighting':
+      return 'bg-red-800 text-white'
+    case 'psychic':
+      return 'bg-violet-400 text-white'
+    case 'rock':
+      return 'bg-zinc-600 text-white'
+    case 'steel':
+      return 'bg-zinc-900 text-white'
+    case 'ice':
+      return 'bg-blue-200 text-black'
+    case 'ghost':
+      return 'bg-zinc-500 text-white'
+    case 'dragon':
+      return 'bg-red-700 text-white'
+    default:
+      return 'bg-slate-100 text-black border'
 
-interface IPaginationProps{
-  pageSize: number
+  }
 }
 
 const CustomTable = () => {  
   const router = useRouter()
-  const [ data, setData ] = useState<IPokemonData>({} as IPokemonData)  
-  const { choosePokemon, setChoosePokemon } = useContext(PokemonContext)
+  const [ data, setData ] = useState<IPokemonData>({} as IPokemonData)    
   const [ searchValue, setSearchValue ] = useState<string>('')
   const [ isLoading, setIsLoading ] = useState<boolean>(true)  
 
@@ -52,51 +82,8 @@ const CustomTable = () => {
     }
   }
 
-  const findTypes = (types: string) =>{
-    switch(types.toLowerCase()){
-      case 'grass':
-        return 'bg-lime-500 text-white'
-      case 'poison':
-        return 'bg-violet-700 text-white'
-      case 'fire':
-        return 'bg-red-500 text-white'
-      case 'water':
-        return 'bg-blue-500 text-white'
-      case 'flying':
-        return 'bg-blue-700 text-white'
-      case 'bug':
-        return 'bg-green-700 text-white'
-      case 'electric':
-        return 'bg-yellow-300 text-black'
-      case 'ground':
-        return 'bg-amber-800 text-white'
-      case 'fairy':
-        return 'bg-indigo-300 text-black'
-      case 'fighting':
-        return 'bg-red-800 text-white'
-      case 'psychic':
-        return 'bg-violet-400 text-white'
-      case 'rock':
-        return 'bg-zinc-600 text-white'
-      case 'steel':
-        return 'bg-zinc-900 text-white'
-      case 'ice':
-        return 'bg-blue-200 text-black'
-      case 'ghost':
-        return 'bg-zinc-500 text-white'
-      case 'dragon':
-        return 'bg-red-700 text-white'
-      default:
-        return 'bg-slate-100 text-black border'
-
-    }
-  }
-  
-  const setParamsPokemon = (event: React.MouseEvent) => {
-    const target = event.currentTarget as HTMLButtonElement;
-    const findPokemonName = target.parentElement?.parentElement?.childNodes[1].textContent;
-    if(findPokemonName)
-    setChoosePokemon(findPokemonName)        
+  const setParamsPokemon = async (elm:PokemonTable) => {    
+    router.push(`/pokemon/${elm}`)    
   }
 
   const columns = [
@@ -119,7 +106,7 @@ const CustomTable = () => {
       render: ((elm:string[])=>
         elm.map((e, index)=>(
           <div key={index+e} className="flex flex-col text-center max-w-[100px] my-2 w-full justify-center">
-            <span className={findTypes(e) + ' rounded-md'}>{e} {index+1}</span>
+            <span className={findTypes(e) + ' rounded-md'}>{e}</span>
           </div>
         ))        
       )
@@ -132,8 +119,8 @@ const CustomTable = () => {
     {
       title: 'Action',
       width: 100,
-      render: (()=>(        
-        <button type="button" onClick={setParamsPokemon} className='text-orange-500 font-bold uppercase hover:text-black'>
+      render: ((value:any)=>(        
+        <button type="button" onClick={()=>{setParamsPokemon(value.name)}} className='text-orange-500 font-bold uppercase hover:text-black'>
           View
         </button>
       ))
@@ -147,7 +134,7 @@ const CustomTable = () => {
   return (      
     <>      
       <SearchBox onSearch={(event)=>handleSearch(event)}/>
-      <Table
+      <Table      
         loading={{indicator: <Loading/>, spinning: isLoading}}
         bordered            
         columns={columns}
