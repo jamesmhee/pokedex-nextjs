@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+'use client'
+import React, { useState, useEffect, useContext } from 'react';
 import { Switch, Table } from 'antd';
 import { GetData } from '../services/GetData';
 import type { TableColumnsType } from 'antd';
-import { IPokemonData, IPokemons } from '../utils/PokemonInterface';
+import { IPokemonData, IPokemons } from '../utils/Interface/PokemonInterface';
 import SearchBox from './SearchBox';
 import Loading from './Loading';
+import { useRouter } from 'next/navigation';
+import { PokemonContext } from '../utils/Store/PokemonStore';
 
 interface ICustomTableProps {
   data: IPokemonData
@@ -16,9 +19,11 @@ interface IPaginationProps{
 }
 
 const CustomTable = () => {  
+  const router = useRouter()
   const [ data, setData ] = useState<IPokemonData>({} as IPokemonData)  
+  const { choosePokemon, setChoosePokemon } = useContext(PokemonContext)
   const [ searchValue, setSearchValue ] = useState<string>('')
-  const [ isLoading, setIsLoading ] = useState<boolean>(true)
+  const [ isLoading, setIsLoading ] = useState<boolean>(true)  
 
   const get = async (searchValue: string) =>{    
     const result = await GetData(200)
@@ -86,19 +91,26 @@ const CustomTable = () => {
 
     }
   }
+  
+  const setParamsPokemon = (event: React.MouseEvent) => {
+    const target = event.currentTarget as HTMLButtonElement;
+    const findPokemonName = target.parentElement?.parentElement?.childNodes[1].textContent;
+    if(findPokemonName)
+    setChoosePokemon(findPokemonName)        
+  }
 
   const columns = [
     {
       title: '#',  
-      width: 50,    
-      maxWidth: 50,
+      width: 60,    
+      maxWidth: 60,
       dataIndex: 'image',
-      render: (elm:string,) => <img loading="lazy" width="50" src={elm}/>
+      render: (elm:string,) => <img loading="lazy" width="60" src={elm}/>
     },
     {
       title: 'Name',
-      width: 100,
-      dataIndex: 'name',
+      width: 150,
+      dataIndex: 'name',      
     },
     {
       title: 'Type',
@@ -116,17 +128,26 @@ const CustomTable = () => {
       title: 'Class',
       width: 150,
       dataIndex: 'classification'
+    },
+    {
+      title: 'Action',
+      width: 100,
+      render: (()=>(        
+        <button type="button" onClick={setParamsPokemon} className='text-orange-500 font-bold uppercase hover:text-black'>
+          View
+        </button>
+      ))
     }
-  ]
+  ]  
 
   useEffect(()=>{
-    get(searchValue)    
+    get(searchValue)
   }, [searchValue])
 
   return (      
     <>      
       <SearchBox onSearch={(event)=>handleSearch(event)}/>
-      <Table        
+      <Table
         loading={{indicator: <Loading/>, spinning: isLoading}}
         bordered            
         columns={columns}

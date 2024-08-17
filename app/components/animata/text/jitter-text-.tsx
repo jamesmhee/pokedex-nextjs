@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/app/libs/utils";
 
 interface JitteryTextProps {
-  text: string;
+  text: string | JSX.Element | JSX.Element[];
   duration?: number;
   className?: string;
 }

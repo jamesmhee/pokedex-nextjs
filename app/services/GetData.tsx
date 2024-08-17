@@ -1,33 +1,23 @@
+import {PokemonData} from '../utils/Interface/PokemonInterface'
+
 const endpoint = process.env.NEXT_PUBLIC_API_URL || 'https://graphql-pokemon2.vercel.app'
 
-export const GetData = async (limit: number):Promise<any> =>{
+export const GetData = async (limit: number):Promise<PokemonData> =>{
     const query = `
     query pokemons($first: Int!){
         pokemons(first: $first){
             id
             number
-            name
-            weight{
-            minimum
-            maximum
-            }
-            height{
-            minimum
-            maximum
-            }
+            name    
             classification
-            types
-            resistant
-            weaknesses
+            types    
             evolutions {
-            id
-            }
-            fleeRate
-            maxCP
-            maxHP
+                id
+            }    
             image
         }
     }
+
     `
     const variables = {
         first: limit
@@ -47,6 +37,6 @@ export const GetData = async (limit: number):Promise<any> =>{
     if(!result.ok){
         throw new Error("Error Get Data")
     }
-
-    return await result.json()
+    const data = await result.json()    
+    return data
 }
