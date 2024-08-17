@@ -6,26 +6,32 @@ import React, { useEffect, useState } from "react";
 import { Divider } from 'antd';
 import { RiArrowGoBackFill } from "react-icons/ri";
 import Loading from "@/app/components/Loading";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { findTypes } from "@/app/components/CustomTable";
 import { FaInfoCircle } from "react-icons/fa";
 import { LuSword } from "react-icons/lu";
+import { TbMoodCry } from "react-icons/tb";
 import { LuSwords } from "react-icons/lu";
 import Image from "next/image";
+import Notfound from "@/app/components/Notfound";
 
 const Page = ({ params }: { params: { slug: string } }) => {  
-  const [ Pokemon, setPokemon ] = useState<PokemonDetail>({} as PokemonDetail)
+  const [ pokemon, setPokemon ] = useState<PokemonDetail>({} as PokemonDetail)
   const [ onEvolution, setOnEvolution ] = useState<boolean>(false)
+  const [ isLoading, setIsLoading ] = useState<boolean>(true)
   const Router = useRouter()
-  
+  const searchParams = useSearchParams()
+
   useEffect(()=>{
+    
     const PokemonData = async ()=>{
-      const data = await GetPokemon(params.slug)
-      if(data){
+      const data = await GetPokemon(params.slug)      
+      if(data.data.pokemon){
         setPokemon(data.data.pokemon)
-      }        
+      }
+      setIsLoading(false)
     }
-    PokemonData()    
+    PokemonData()        
   },[params.slug])
 
   const findAvg = (min:number, max:number)=> {
@@ -42,8 +48,15 @@ const Page = ({ params }: { params: { slug: string } }) => {
 
   return (
     <div>
-      {
-        Object.keys(Pokemon).length > 0 ?         
+      {isLoading ? 
+      (
+        <div className="flex w-full h-screen items-center justify-center">
+          <Loading/>
+        </div>
+      ) 
+      : 
+      (
+        JSON.stringify(pokemon) !== '{}' ?
         (
           <>          
             <div className="flex sm:hidden items-center my-2 mr-[-15px] text-lg justify-end">
@@ -58,12 +71,12 @@ const Page = ({ params }: { params: { slug: string } }) => {
                   sizes="100vw"
                   style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
                   className="rounded-t-xl sm:min-w-[500px]" 
-                  src={Pokemon.image} />
+                  src={pokemon.image} />
                 <div className="flex justify-between w-full border bg-zinc-300 px-5 py-3 text-zinc-900 rounded-b-xl items-center">
                   <span className="text-2xl sm:text-3xl font-medium uppercase">
-                    {Pokemon.name}
+                    {pokemon.name}
                   </span>
-                  <span className="text-right text-[12px] sm:text-base">{Pokemon.classification}</span>
+                  <span className="text-right text-[12px] sm:text-base">{pokemon.classification}</span>
                 </div>
               </div>
               <ul className="flex flex-col gap-5 flex-0 w-full">
@@ -79,7 +92,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
                     <div className="flex gap-2">
                       <span className="font-bold">Type:</span>
                       <div className="flex flex-wrap gap-2">
-                        {Pokemon.types.map((elm, index) => (
+                        {pokemon.types.map((elm, index) => (
                           <span className={findTypes(elm) + ' px-5 rounded-lg'} key={index}>
                             {elm}
                           </span>
@@ -89,33 +102,33 @@ const Page = ({ params }: { params: { slug: string } }) => {
                     <div className="flex gap-2">
                       <span className="font-bold">Weight:</span>
                       <span>
-                        {findAvg(parseFloat(Pokemon.weight.minimum), parseFloat(Pokemon.weight.maximum)) + ' kg'}
+                        {findAvg(parseFloat(pokemon.weight.minimum), parseFloat(pokemon.weight.maximum)) + ' kg'}
                       </span>
                     </div>
                     <div className="flex gap-2">
                       <span className="font-bold">Height:</span>
                       <span>
-                        {findAvg(parseFloat(Pokemon.height.minimum), parseFloat(Pokemon.height.maximum)) + ' m'}
+                        {findAvg(parseFloat(pokemon.height.minimum), parseFloat(pokemon.height.maximum)) + ' m'}
                       </span>
                     </div>
                     <div className="flex gap-2">
                       <span className="font-bold">Flee Rate:</span>
-                      <span>{Pokemon.fleeRate}</span>
+                      <span>{pokemon.fleeRate}</span>
                     </div>
                     <div className="flex gap-2">
                       <span className="font-bold">MAX CP:</span>
-                      <span>{Pokemon.maxCP}</span>
+                      <span>{pokemon.maxCP}</span>
                     </div>
                     <div className="flex gap-2">
                       <span className="font-bold">MAX HP:</span>
-                      <span>{Pokemon.maxHP}</span>
+                      <span>{pokemon.maxHP}</span>
                     </div>
                   </li>                  
                   <li className="flex-1 leading-10">
                     <div className="flex gap-2 mb-2">
                       <span className="font-bold">Resistant:</span>
                       <div className="flex gap-2 flex-wrap">
-                        {Pokemon.resistant.map((elm, index) => (
+                        {pokemon.resistant.map((elm, index) => (
                           <span key={index} className={findTypes(elm) + ' px-5 rounded-lg'}>
                             {elm}
                           </span>
@@ -125,7 +138,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
                     <div className="flex gap-2">
                       <span className="font-bold">Weakness:</span>
                       <div className="flex gap-2 flex-wrap">
-                        {Pokemon.weaknesses.map((elm, index) => (
+                        {pokemon.weaknesses.map((elm, index) => (
                           <span key={index} className={findTypes(elm) + ' px-5 rounded-lg'}>
                             {elm}
                           </span>
@@ -135,8 +148,8 @@ const Page = ({ params }: { params: { slug: string } }) => {
                   </li>                  
                 </div>
                 {
-                  Pokemon.evolutions ? 
-                  (<><CustomButton onLoading={onEvolution} type={"primary"} text={'EVOLUTION'} onClick={()=>Evolution(Pokemon.evolutions[0].name)}/></>)
+                  pokemon.evolutions ? 
+                  (<><CustomButton onLoading={onEvolution} type={"primary"} text={'EVOLUTION'} onClick={()=>Evolution(pokemon.evolutions[0].name)}/></>)
                   :
                   (<></>)
                 }                
@@ -149,7 +162,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
               </Divider>
               <li className="flex gap-2">
                 <div className="flex gap-2 flex-col">
-                  {Pokemon.attacks.fast.map((elm, index) => (
+                  {pokemon.attacks.fast.map((elm, index) => (
                     <div key={index} className="flex w-full gap-2 flex-wrap">
                       <span className="font-bold">Name:</span>
                       <span>{elm.name}</span>
@@ -167,7 +180,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
               </Divider>
               <li className="flex gap-2">
                 <div className="flex gap-2 flex-col">
-                  {Pokemon.attacks.special.map((elm, index) => (
+                  {pokemon.attacks.special.map((elm, index) => (
                     <div key={index} className="flex w-full gap-2 flex-wrap">
                       <span className="font-bold">Name:</span>
                       <span>{elm.name}</span>
@@ -180,15 +193,13 @@ const Page = ({ params }: { params: { slug: string } }) => {
                 </div>
               </li>
             </ul>
-
-            
           </>
         )
         :
         (
-          <Loading/>
+          <Notfound pokemonName={params.slug}/>
         )
-      }
+      )}
     </div>
   );
 };

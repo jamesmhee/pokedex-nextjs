@@ -23,7 +23,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
           color="#dadada"
           size={3}
         >        
-          <div className="min-w-screen min-h-screen flex flex-col gap-2 items-center">        
+          <div className="min-w-screen min-h-[80vh] flex flex-col gap-2 items-center">        
             <Link href="/">
               <div className="flex items-center sm:hover:scale-125 transition-all duration-300 my-[-70px]">
                 <JitterText
@@ -33,7 +33,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
                 />                
               </div>
             </Link>
-            <div className="p-5 rounded-3xl w-[calc(100vw_-_50px)] max-h-full mb-5 bg-opacity-70 bg-zinc-200">
+            <div className="p-5 rounded-3xl w-[calc(100vw_-_50px)] min-h-screen max-h-full mb-5 bg-opacity-70 bg-zinc-200">
               <AntdRegistry>{children}</AntdRegistry>              
             </div>
           </div>      

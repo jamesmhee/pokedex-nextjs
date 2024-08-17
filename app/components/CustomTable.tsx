@@ -144,12 +144,15 @@ const CustomTable = () => {
     <>      
       <SearchBox onSearch={(event)=>handleSearch(event)}/>
       <Table      
+        
         rowKey="id"
         loading={{indicator: <Loading/>, spinning: isLoading}}
         bordered            
         columns={columns}
         dataSource={data.length > 0 ? data : []}
         scroll={{y: 'calc(100vh - 25em)'}}
+        sticky
+        rowHoverable
         summary={() => (
           <Table.Summary>
             <Table.Summary.Row>
