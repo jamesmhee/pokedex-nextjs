@@ -8,10 +8,14 @@ import { RiArrowGoBackFill } from "react-icons/ri";
 import Loading from "@/app/components/Loading";
 import { useRouter } from "next/navigation";
 import { findTypes } from "@/app/components/CustomTable";
+import { FaInfoCircle } from "react-icons/fa";
+import { LuSword } from "react-icons/lu";
+import { LuSwords } from "react-icons/lu";
+import Image from "next/image";
 
-const page = ({ params }: { params: { slug: string } }) => {  
-  const [ pokemon, setPokemon ] = useState<PokemonDetail>({} as PokemonDetail)
-  const router = useRouter()
+const Page = ({ params }: { params: { slug: string } }) => {  
+  const [ Pokemon, setPokemon ] = useState<PokemonDetail>({} as PokemonDetail)
+  const Router = useRouter()
   
   useEffect(()=>{
     const PokemonData = async ()=>{
@@ -31,173 +35,126 @@ const page = ({ params }: { params: { slug: string } }) => {
   return (
     <div>
       {
-        Object.keys(pokemon).length > 0 ?         
+        Object.keys(Pokemon).length > 0 ?         
         (
           <>
             <div className="flex items-center gap-5 text-lg justify-end">
-              <CustomButton type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>router.back()}/>
-            </div>
-            <Divider orientation="left">
-              <span className="text-3xl font-medium">
-                {pokemon.name}
-              </span>
-            </Divider>            
-            <div className="flex flex-col sm:flex-row gap-5 flex-wrap overflow-x-scroll overflow-y-hidden">
-              <img alt="Pokemon Image" className="rounded-md w-full sm:max-w-[300px] md:max-w-[350px]" src={pokemon.image}/>              
-              <ul className="flex flex-col gap-5 flex-1">
-                <Divider orientation="left" plain>
-                  <span className="text-xl font-medium">
-                    Info
+              <CustomButton type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
+            </div>            
+            <div className="flex flex-col md:flex-row justify-between gap-5 overflow-hidden">
+              <div className="mx-auto w-full sm:w-max justify-center items-center sm:mx-auto md:mx-0 flex flex-col">
+                <Image alt="Pokemon Image" 
+                  width={0}
+                  height={0}                  
+                  priority                  
+                  sizes="100vw"
+                  style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+                  className="rounded-t-xl sm:min-w-[500px]" 
+                  src={Pokemon.image} />
+                <div className="flex justify-between w-full border bg-zinc-300 px-5 py-3 text-zinc-900 rounded-b-xl items-center">
+                  <span className="text-2xl sm:text-3xl font-medium uppercase">
+                    {Pokemon.name}
                   </span>
-                </Divider>                
+                  <span className="text-right text-[12px] sm:text-base">{Pokemon.classification}</span>
+                </div>
+              </div>
+              <ul className="flex flex-col gap-5 flex-0">
+                <Divider orientation="left" orientationMargin={0} plain>
+                  <span className="text-xl flex items-center gap-2 font-medium"><FaInfoCircle/> Info</span>
+                </Divider>
+
                 <div className="flex gap-2 flex-wrap">
-                  <li className="flex-1 leading-10">
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      Class:
-                      </span>
-                      <span>
-                        {pokemon.classification}
-                      </span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      Type:
-                      </span>
-                      {
-                        pokemon.types.map((elm,index)=>(
+                  <li className="flex-1 leading-10">                    
+                    <div className="flex gap-2">
+                      <span className="font-bold">Type:</span>
+                      <div className="flex flex-wrap gap-2">
+                        {Pokemon.types.map((elm, index) => (
                           <span className={findTypes(elm) + ' px-5 rounded-lg'} key={index}>
                             {elm}
                           </span>
-                        ))
-                      }
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      Weight:
-                      </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-bold">Weight:</span>
                       <span>
-                        {
-                          findAvg(parseFloat(pokemon.weight.minimum), parseFloat(pokemon.weight.maximum)) + ' kg'
-                        }
+                        {findAvg(parseFloat(Pokemon.weight.minimum), parseFloat(Pokemon.weight.maximum)) + ' kg'}
                       </span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      Height:
-                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-bold">Height:</span>
                       <span>
-                        {
-                          findAvg(parseFloat(pokemon.height.minimum), parseFloat(pokemon.height.maximum)) + ' m'
-                        }
+                        {findAvg(parseFloat(Pokemon.height.minimum), parseFloat(Pokemon.height.maximum)) + ' m'}
                       </span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      Flee Rate:
-                      </span>
-                      <span>
-                        {pokemon.fleeRate}
-                      </span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      MAX CP:
-                      </span>
-                      <span>
-                        {pokemon.maxCP}
-                      </span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="font-bold">
-                      MAX HP:
-                      </span>
-                      <span>
-                        {pokemon.maxHP}
-                      </span>
-                    </li>                
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-bold">Flee Rate:</span>
+                      <span>{Pokemon.fleeRate}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-bold">MAX CP:</span>
+                      <span>{Pokemon.maxCP}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="font-bold">MAX HP:</span>
+                      <span>{Pokemon.maxHP}</span>
+                    </div>
                   </li>
+
                   <li className="flex-1 leading-10">
-                    <li className="flex gap-2">
-                        <span className="font-bold">
-                        Resistant:
-                        </span>
-                        <span>
-                          {pokemon.resistant.map((elm,index)=>(
-                            <div key={index} className="flex gap-2">
-                              <span className={findTypes(elm) + ' px-5'}>{elm}</span>
-                            </div>
-                          ))}
-                        </span>
-                      </li>                
+                    <div className="flex gap-2">
+                      <span className="font-bold">Resistant:</span>
+                      <div className="flex gap-2 flex-wrap">
+                        {Pokemon.resistant.map((elm, index) => (
+                          <span key={index} className={findTypes(elm) + ' px-5 rounded-lg'}>
+                            {elm}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </li>
                 </div>
-              </ul>            
-            </div>
-            <ul className="flex flex-col gap-5">
-                <Divider orientation="left" plain>
-                  <span className="text-xl font-medium">
-                    Normal Attack
-                  </span>
-                </Divider>     
-                <li className="flex gap-2">
-                  <span className="flex gap-2 flex-col">
-                    {pokemon.attacks.fast.map((elm, index)=>(
-                      <div key={index} className="flex w-full gap-2 flex-wrap">
-                        <span className="font-bold">
-                          Name:
-                        </span>
-                        <span>
-                          {elm.name}
-                        </span>
-                        <span className="font-bold">
-                          Type:
-                        </span>
-                        <span>
-                          {elm.type}
-                        </span>                        
-                        <span className="font-bold">
-                          Damage:
-                        </span>
-                        <span>
-                          {elm.damage}
-                        </span>
-                      </div>
-                    ))}
-                  </span>
-                </li>                
-                <Divider orientation="left" plain>
-                  <span className="text-xl font-medium">
-                    Special Attack
-                  </span>
-                </Divider>
-                <li className="flex gap-2">                  
-                  <span className="flex gap-2 flex-col">
-                    {pokemon.attacks.special.map((elm, index)=>(
-                      <div key={index} className="flex w-full gap-2 flex-wrap">
-                        <span className="font-bold">
-                          Name:
-                        </span>
-                        <span>
-                          {elm.name}
-                        </span>
-                        <span className="font-bold">
-                          Type:
-                        </span>
-                        <span>
-                          {elm.type}
-                        </span>                        
-                        <span className="font-bold">
-                          Damage:
-                        </span>
-                        <span>
-                          {elm.damage}
-                        </span>
-                      </div>
-                    ))}
-                  </span>
-                </li>                
               </ul>
+            </div>
+
+            <ul className="flex flex-col gap-5">
+              <Divider orientation="left" orientationMargin={0} plain>
+                <span className="text-xl flex items-center gap-2 font-medium"><LuSword/> Normal Attack</span>
+              </Divider>
+              <li className="flex gap-2">
+                <div className="flex gap-2 flex-col">
+                  {Pokemon.attacks.fast.map((elm, index) => (
+                    <div key={index} className="flex w-full gap-2 flex-wrap">
+                      <span className="font-bold">Name:</span>
+                      <span>{elm.name}</span>
+                      <span className="font-bold">Type:</span>
+                      <span>{elm.type}</span>
+                      <span className="font-bold">Damage:</span>
+                      <span>{elm.damage}</span>
+                    </div>
+                  ))}
+                </div>
+              </li>
+
+              <Divider orientation="left" orientationMargin={0} plain>
+                <span className="text-xl flex items-center gap-2 font-medium"><LuSwords/> Special Attack</span>
+              </Divider>
+              <li className="flex gap-2">
+                <div className="flex gap-2 flex-col">
+                  {Pokemon.attacks.special.map((elm, index) => (
+                    <div key={index} className="flex w-full gap-2 flex-wrap">
+                      <span className="font-bold">Name:</span>
+                      <span>{elm.name}</span>
+                      <span className="font-bold">Type:</span>
+                      <span>{elm.type}</span>
+                      <span className="font-bold">Damage:</span>
+                      <span>{elm.damage}</span>
+                    </div>
+                  ))}
+                </div>
+              </li>
+            </ul>
+
             
           </>
         )
@@ -210,4 +167,4 @@ const page = ({ params }: { params: { slug: string } }) => {
   );
 };
 
-export default page;
+export default Page;

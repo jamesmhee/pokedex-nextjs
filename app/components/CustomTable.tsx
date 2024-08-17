@@ -6,6 +6,7 @@ import type { TableColumnsType } from 'antd';
 import { IPokemonData, IPokemons, PokemonTable } from '../utils/Interface/PokemonInterface';
 import SearchBox from './SearchBox';
 import Loading from './Loading';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { PokemonContext } from '../utils/Store/PokemonStore';
 
@@ -92,7 +93,15 @@ const CustomTable = () => {
       width: 60,    
       maxWidth: 60,
       dataIndex: 'image',
-      render: (elm:string,) => <img loading="lazy" width="60" src={elm}/>
+      render: (elm:string,) => (
+        <Image alt="Pokemon Image" 
+        width={0}
+        height={0}                  
+        priority                  
+        sizes="100vw"
+        style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+        className="rounded-md sm:min-w-[50px]" 
+        src={elm} />)
     },
     {
       title: 'Name',
@@ -135,6 +144,7 @@ const CustomTable = () => {
     <>      
       <SearchBox onSearch={(event)=>handleSearch(event)}/>
       <Table      
+        rowKey="id"
         loading={{indicator: <Loading/>, spinning: isLoading}}
         bordered            
         columns={columns}

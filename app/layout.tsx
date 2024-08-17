@@ -23,7 +23,7 @@ const RootLayout = ({ children }: React.PropsWithChildren) => (
           color="#dadada"
           size={3}
         >        
-          <div className="h-screen w-screen max-w-screen max-h-screen flex flex-col gap-2 items-center">        
+          <div className="min-w-screen min-h-screen flex flex-col gap-2 items-center">        
             <Link href="/">
               <div className="flex items-center sm:hover:scale-125 transition-all duration-300 my-[-70px]">
                 <JitterText
