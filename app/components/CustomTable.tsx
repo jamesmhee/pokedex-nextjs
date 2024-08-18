@@ -142,7 +142,7 @@ const CustomTable = () => {
 
   return (      
     <>      
-      <SearchBox onSearch={(event)=>handleSearch(event)}/>
+      <SearchBox onSearch={(event:string)=>handleSearch(event)}/>
       <Table      
         
         rowKey="id"

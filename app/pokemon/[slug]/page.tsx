@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { findTypes } from "@/app/components/CustomTable";
 import { FaInfoCircle } from "react-icons/fa";
 import { LuSword } from "react-icons/lu";
-import { TbMoodCry } from "react-icons/tb";
+import { GiUpgrade } from "react-icons/gi";
 import { LuSwords } from "react-icons/lu";
 import Image from "next/image";
 import Notfound from "@/app/components/Notfound";
@@ -60,7 +60,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
         (
           <>          
             <div className="flex sm:hidden items-center my-2 mr-[-15px] text-lg justify-end">
-                <CustomButton onLoading={false} type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
+                <CustomButton size={'small'} onLoading={false} type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
             </div>  
             <div className="flex flex-col md:flex-row gap-5 overflow-hidden">
               <div className="mx-auto w-full sm:w-max justify-center items-center sm:mx-auto md:mx-0 flex flex-col">
@@ -81,7 +81,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
               </div>
               <ul className="flex flex-col gap-5 flex-0 w-full">
                 <div className="hidden sm:flex items-center gap-5 text-lg justify-end">
-                  <CustomButton onLoading={false} type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
+                  <CustomButton size={'small'} onLoading={false} type="text" text={(<RiArrowGoBackFill className="text-2xl"/>)} onClick={()=>Router.back()}/>
                 </div>
                 <Divider orientation="left" orientationMargin={0} plain>
                   <span className="text-xl flex items-center gap-2 font-medium"><FaInfoCircle/> Info</span>
@@ -149,7 +149,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
                 </div>
                 {
                   pokemon.evolutions ? 
-                  (<><CustomButton onLoading={onEvolution} type={"primary"} text={'EVOLUTION'} onClick={()=>Evolution(pokemon.evolutions[0].name)}/></>)
+                  (<><CustomButton size={'large'} property={{bg: '#ff892e', color: 'white', 'border': 'white', 'hoverbg': '#ff6f00', 'fontSize': 16, 'paddingY': 50}} onLoading={onEvolution} type={"default"} text={'EVOLUTION'} icon={<GiUpgrade className="text-xl"/>} onClick={()=>Evolution(pokemon.evolutions[0].name)}/></>)
                   :
                   (<></>)
                 }                
