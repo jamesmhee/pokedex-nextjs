@@ -76,11 +76,7 @@ const CustomTable = () => {
 
   const handleSearch = (event:string) =>{
     setIsLoading(true)
-    if(event.trim() !== searchValue.trim()){
-      setSearchValue(event.trim())
-    }else{      
-      setIsLoading(false)
-    }
+    setSearchValue(event.trim())    
   }
 
   const setParamsPokemon = async (elm:PokemonTable) => {    
@@ -130,7 +126,7 @@ const CustomTable = () => {
       width: 100,
       render: ((value:any)=>(        
         <button type="button" onClick={()=>{setParamsPokemon(value.name)}} className='text-orange-500 font-bold uppercase hover:text-black'>
-          View
+          Views
         </button>
       ))
     }
@@ -142,7 +138,7 @@ const CustomTable = () => {
 
   return (      
     <>      
-      <SearchBox onSearch={(event:string)=>handleSearch(event)}/>
+      <SearchBox data={data} onSearch={(event:string)=>handleSearch(event)}/>        
       <Table      
         
         rowKey="id"
