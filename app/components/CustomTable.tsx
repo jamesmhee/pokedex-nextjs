@@ -8,7 +8,6 @@ import SearchBox from './SearchBox';
 import Loading from './Loading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { PokemonContext } from '../utils/Store/PokemonStore';
 
 export const findTypes = (types: string) =>{
   switch(types.toLowerCase()){
@@ -59,19 +58,13 @@ const CustomTable = () => {
   const get = async (searchValue: string) =>{    
     const result = await GetData(200)
     setIsLoading(false)
-    if(result){
+    if(JSON.stringify(result) !== '{}'){
       setData(result?.data?.pokemons)
     }
-
-    if(searchValue.trim() !== ''){      
-      const filter = result?.data?.pokemons.filter((elm: IPokemons , index: number)=>{
-        return elm.name.toLowerCase().includes(searchValue.toLowerCase())
-      })            
-      setData(filter)
-    }else{
-      const fetchNewData = await GetData(200)
-      setData(fetchNewData?.data?.pokemons)
-    }    
+    const filter = result?.data?.pokemons.filter((elm: IPokemons , index: number)=>{
+      return elm.name.toLowerCase().includes(searchValue.toLowerCase())
+    })            
+    setData(filter)
   }
 
   const handleSearch = (event:string) =>{
